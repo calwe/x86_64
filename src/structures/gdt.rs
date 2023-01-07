@@ -46,7 +46,7 @@ use crate::registers::segmentation::{Segment, CS, SS};
 
 #[derive(Debug, Clone)]
 pub struct GlobalDescriptorTable {
-    table: [u64; 8],
+    table: [u64; 10],
     len: usize,
 }
 
@@ -55,7 +55,7 @@ impl GlobalDescriptorTable {
     #[inline]
     pub const fn new() -> GlobalDescriptorTable {
         GlobalDescriptorTable {
-            table: [0; 8],
+            table: [0; 10],
             len: 1,
         }
     }
@@ -69,11 +69,11 @@ impl GlobalDescriptorTable {
     #[inline]
     pub const unsafe fn from_raw_slice(slice: &[u64]) -> GlobalDescriptorTable {
         let len = slice.len();
-        let mut table = [0; 8];
+        let mut table = [0; 10];
         let mut idx = 0;
 
         assert!(
-            len <= 8,
+            len <= 10,
             "initializing a GDT from a slice requires it to be **at most** 8 elements."
         );
 
@@ -251,7 +251,7 @@ bitflags! {
 /// implement this functionality.
 impl DescriptorFlags {
     // Flags that we set for all our default segments
-    const COMMON: Self = Self::from_bits_truncate(
+    pub const COMMON: Self = Self::from_bits_truncate(
         Self::USER_SEGMENT.bits()
             | Self::PRESENT.bits()
             | Self::WRITABLE.bits()
@@ -377,7 +377,8 @@ mod tests {
     fn make_full_gdt() -> GlobalDescriptorTable {
         let mut gdt = make_six_entry_gdt();
         gdt.add_entry(Descriptor::tss_segment(&TSS));
-        assert_eq!(gdt.len, 8);
+        gdt.add_entry(Descriptor::tss_segment(&TSS));
+        assert_eq!(gdt.len, 10);
         gdt
     }
 
