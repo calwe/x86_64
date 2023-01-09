@@ -46,7 +46,7 @@ use crate::registers::segmentation::{Segment, CS, SS};
 
 #[derive(Debug, Clone)]
 pub struct GlobalDescriptorTable {
-    table: [u64; 10],
+    table: [u64; 12],
     len: usize,
 }
 
@@ -55,7 +55,7 @@ impl GlobalDescriptorTable {
     #[inline]
     pub const fn new() -> GlobalDescriptorTable {
         GlobalDescriptorTable {
-            table: [0; 10],
+            table: [0; 12],
             len: 1,
         }
     }
@@ -69,11 +69,11 @@ impl GlobalDescriptorTable {
     #[inline]
     pub const unsafe fn from_raw_slice(slice: &[u64]) -> GlobalDescriptorTable {
         let len = slice.len();
-        let mut table = [0; 10];
+        let mut table = [0; 12];
         let mut idx = 0;
 
         assert!(
-            len <= 10,
+            len <= 12,
             "initializing a GDT from a slice requires it to be **at most** 8 elements."
         );
 
