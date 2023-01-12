@@ -250,7 +250,7 @@ bitflags! {
 /// tracking at the GDT level. Kernels using these values should use paging to
 /// implement this functionality.
 impl DescriptorFlags {
-    // Flags that we set for all our default segments
+    /// Flags that we set for all our default segments
     pub const COMMON: Self = Self::from_bits_truncate(
         Self::USER_SEGMENT.bits()
             | Self::PRESENT.bits()
